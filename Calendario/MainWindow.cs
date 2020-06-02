@@ -57,7 +57,7 @@ namespace CalendarProject
             currentDateWeekTitle.Text = monthTitle;
         }
 
-        private string GetWeekCalendarMonthTitle()
+        private static string GetWeekCalendarMonthTitle()
         {
             List<DateTime> currentWeekDates = Calendar.GetCurrentWeekDates();
             string monthTitle = "";
@@ -185,7 +185,7 @@ namespace CalendarProject
             ShowAppointmentDetailsForSelectedDateTime(appointmentDetails);
         }
 
-        private List<string[]> GetAppointmentsOfSelectedDayMonthCalendar(string currentCellValue)
+        private static List<string[]> GetAppointmentsOfSelectedDayMonthCalendar(string currentCellValue)
         {
             string selectedDay = currentCellValue.Split(new string[] { Constants.AppointmentsSeparator }, StringSplitOptions.None)[Constants.MonthCalendarSelectorIndex];
             DateTime selectedDate = new DateTime(Calendar.CurrentDate.Year, Calendar.CurrentDate.Month, Convert.ToInt32(selectedDay));
@@ -206,7 +206,7 @@ namespace CalendarProject
             ShowAppointmentDetailsForSelectedDateTime(appointments);
         }
 
-        private List<string[]> GetAppointmentsOfSelectedDayWeekCalendar(DataGridViewCell selectedCell)
+        private static List<string[]> GetAppointmentsOfSelectedDayWeekCalendar(DataGridViewCell selectedCell)
         {
             int columnIndex = selectedCell.ColumnIndex;
             int rowIndex = selectedCell.RowIndex;
@@ -243,7 +243,7 @@ namespace CalendarProject
             DataGridViewRow selectedRow = appointmentsDataGrid.SelectedRows[Constants.MonthCalendarSelectorIndex];
             int selectedId = Convert.ToInt32(selectedRow.Cells[0].Value);
             Appointment selectedAppointment = Calendar.GetAppointmentFromId(selectedId);
-            if (Calendar.CurrentUser.Username == selectedAppointment.Owner.Username)
+            if (Calendar.CurrentUser.UserName == selectedAppointment.Owner.UserName)
             {
                 EditAppointment editAppointmentForm = new EditAppointment(this, selectedId);
                 editAppointmentForm.Show();

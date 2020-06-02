@@ -86,8 +86,8 @@ namespace CalendarProject
             StringBuilder appointmentBuilder = new StringBuilder("");
             foreach (DateTime dateToInsertInto in currentWeekDates)
             {
-                List<Appointment> currentUserAppointments = appointments.FindAll(appointment => appointment.Date.Date == dateToInsertInto.Date && appointment.Owner.Username == currentUser.Username);
-                List<Appointment> appointmentsUserHasBeenInvited = appointments.FindAll(appointment => appointment.Date.Date == dateToInsertInto.Date && appointment.InvitedUsers.Select(user => user.Username).Contains(currentUser.Username));
+                List<Appointment> currentUserAppointments = appointments.FindAll(appointment => appointment.Date.Date == dateToInsertInto.Date && appointment.Owner.UserName == currentUser.UserName);
+                List<Appointment> appointmentsUserHasBeenInvited = appointments.FindAll(appointment => appointment.Date.Date == dateToInsertInto.Date && appointment.InvitedUsers.Select(user => user.UserName).Contains(currentUser.UserName));
                 appointmentsToInsert = currentUserAppointments.Concat(appointmentsUserHasBeenInvited).ToList();
                 foreach (Appointment appointmentToInsert in appointmentsToInsert)
                 {
@@ -148,8 +148,8 @@ namespace CalendarProject
 
         public static List<string[]> GetAppointmentsDetailsMonthCalendar(DateTime selectedDate)
         {
-            List<Appointment> selectedDateUserOwnerAppointments = appointments.FindAll(appointment => appointment.Date.Date == selectedDate.Date && appointment.Owner.Username == currentUser.Username);
-            List<Appointment> appointmentsUserHasBeenInvited = appointments.FindAll(appointment => appointment.Date.Date == selectedDate.Date && appointment.InvitedUsers.Select(user => user.Username).Contains(currentUser.Username));
+            List<Appointment> selectedDateUserOwnerAppointments = appointments.FindAll(appointment => appointment.Date.Date == selectedDate.Date && appointment.Owner.UserName == currentUser.UserName);
+            List<Appointment> appointmentsUserHasBeenInvited = appointments.FindAll(appointment => appointment.Date.Date == selectedDate.Date && appointment.InvitedUsers.Select(user => user.UserName).Contains(currentUser.UserName));
             List<Appointment> selectedDateAppointments = selectedDateUserOwnerAppointments.Concat(appointmentsUserHasBeenInvited).ToList();
             List<string[]> appointmentsDetails = FormatAppointmentsDetails(selectedDateAppointments);
             return appointmentsDetails;
@@ -157,8 +157,8 @@ namespace CalendarProject
 
         public static List<string[]> GetAppointmentsDetailsWeekCalendar(DateTime selectedDate, (TimeSpan, TimeSpan) timeInterval)
         {
-            List<Appointment> selectedDateUserOwnerAppointments = appointments.FindAll(appointment => appointment.Date.Date == selectedDate.Date && appointment.Owner.Username == currentUser.Username);
-            List<Appointment> appointmentsUserHasBeenInvited = appointments.FindAll(appointment => appointment.Date.Date == selectedDate.Date && appointment.InvitedUsers.Select(user => user.Username).Contains(currentUser.Username));
+            List<Appointment> selectedDateUserOwnerAppointments = appointments.FindAll(appointment => appointment.Date.Date == selectedDate.Date && appointment.Owner.UserName == currentUser.UserName);
+            List<Appointment> appointmentsUserHasBeenInvited = appointments.FindAll(appointment => appointment.Date.Date == selectedDate.Date && appointment.InvitedUsers.Select(user => user.UserName).Contains(currentUser.UserName));
             List<Appointment> selectedDateAppointments = selectedDateUserOwnerAppointments.Concat(appointmentsUserHasBeenInvited).ToList();
             List<Appointment> selectedDateAndTimeAppointments = selectedDateAppointments.FindAll(appointment => FilterAppointmentIntersectsInterval(appointment, timeInterval));
             List<string[]> appointmentsDetails = FormatAppointmentsDetails(selectedDateAndTimeAppointments);
@@ -282,14 +282,15 @@ namespace CalendarProject
                     users = (List<User>)userData.Deserialize(stream);
                 }
             }
-            catch
+            catch(Exception)
             {
+                //We do not do anything because when serialize is called it creates the file if it doesn't exists.
                 return;
             }
         }
         public static void LogInOrCreateUser(string username)
         {
-            List<User> coincidentUsers = users.FindAll(user => user.Username == username);
+            List<User> coincidentUsers = users.FindAll(user => user.UserName == username);
             if (coincidentUsers.Any())
             {
                 currentUser = coincidentUsers.First();
@@ -302,12 +303,12 @@ namespace CalendarProject
 
         public static List<User> GetPossibleInvitedUsers(DateTime date, TimeSpan startTime, TimeSpan endTime)
         {
-            List<User> possibleUsers = users.FindAll(user => user.Username != currentUser.Username);
+            List<User> possibleUsers = users.FindAll(user => user.UserName != currentUser.UserName);
             List<User> validUsers = new List<User> { };
             (TimeSpan, TimeSpan) actualInterval = (startTime, endTime);
             foreach (User user in possibleUsers)
             {
-                List<Appointment> possibleUserIntersectAppointments = appointments.FindAll(appointment => appointment.Owner.Username == user.Username
+                List<Appointment> possibleUserIntersectAppointments = appointments.FindAll(appointment => appointment.Owner.UserName == user.UserName
                                                                                 && FilterAppointmentIntersectsDateTime(date, actualInterval, appointment));
                 if (!possibleUserIntersectAppointments.Any())
                 {
@@ -441,8 +442,8 @@ namespace CalendarProject
         private static string InsertAppointmentsOnMonthCalendarDay(string dayNumber)
         {
             DateTime appointmentDate = new DateTime(currentDate.Year, currentDate.Month, Convert.ToInt32(dayNumber));
-            List<Appointment> currentUserAppointments = appointments.FindAll(appointment => appointment.Date.Date == appointmentDate.Date && appointment.Owner.Username == currentUser.Username);
-            List<Appointment> appointmentsUserHasBeenInvited = appointments.FindAll(appointment => appointment.Date.Date == appointmentDate.Date && appointment.InvitedUsers.Select(user => user.Username).Contains(currentUser.Username));
+            List<Appointment> currentUserAppointments = appointments.FindAll(appointment => appointment.Date.Date == appointmentDate.Date && appointment.Owner.UserName == currentUser.UserName);
+            List<Appointment> appointmentsUserHasBeenInvited = appointments.FindAll(appointment => appointment.Date.Date == appointmentDate.Date && appointment.InvitedUsers.Select(user => user.UserName).Contains(currentUser.UserName));
             List<Appointment> appointmentsToInsert = currentUserAppointments.Concat(appointmentsUserHasBeenInvited).ToList();
             string dayNumberWithAppointments = dayNumber;
             string appointmentName = "";

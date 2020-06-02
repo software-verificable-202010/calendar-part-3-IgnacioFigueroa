@@ -30,7 +30,7 @@ namespace CalendarProject
             List<User> possibleInvitedUsers = Calendar.GetPossibleInvitedUsers(datePicker.Value, startTimePicker.Value.TimeOfDay, endTimePicker.Value.TimeOfDay);
             foreach (User user in possibleInvitedUsers)
             {
-                usersListBox.Items.Add(user.Username);
+                usersListBox.Items.Add(user.UserName);
             }
         }
         private void EditAppointmentLoad(object sender, EventArgs e)
@@ -47,7 +47,7 @@ namespace CalendarProject
         private void SelectInvitedUsers()
         {
             Appointment appointmentToEdit = Calendar.GetAppointmentFromId(selectedAppointmentId);
-            List<string> invitedUsersUsernames = appointmentToEdit.InvitedUsers.Select(user => user.Username).ToList();
+            List<string> invitedUsersUsernames = appointmentToEdit.InvitedUsers.Select(user => user.UserName).ToList();
             for (int currentIndex = 0; currentIndex < usersListBox.Items.Count; currentIndex++)
             {
                 if (invitedUsersUsernames.Contains(usersListBox.Items[currentIndex].ToString()))
@@ -69,7 +69,7 @@ namespace CalendarProject
             List<string> selectedUsers = usersListBox.SelectedItems.Cast<string>().ToList();
             foreach (string username in selectedUsers)
             {
-                invitedUsers.Add(Calendar.Users.Find(user => user.Username == username));
+                invitedUsers.Add(Calendar.Users.Find(user => user.UserName == username));
             }
             appointmentToEdit.InvitedUsers = invitedUsers;
             Calendar.SerializeAppointments();
