@@ -226,7 +226,7 @@ namespace CalendarProject
                 appointmentsDataGrid.Rows.Add(details);
             }
         }
-        #endregion
+        
 
         private void MainWindowFormClosed(object sender, FormClosedEventArgs e)
         {
@@ -253,5 +253,6 @@ namespace CalendarProject
                 MessageBox.Show(Constants.NotYourAppointmentMessage);
             }
         }
+        #endregion
     }
 }
